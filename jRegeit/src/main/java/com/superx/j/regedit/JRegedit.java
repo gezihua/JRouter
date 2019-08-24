@@ -22,7 +22,7 @@ import java.util.concurrent.ConcurrentSkipListSet;
  * DES:
  * QQ:1553202383
  */
-public enum JRegedit {
+enum JRegedit {
     API;
     private final static String TAG = JRegedit.class.getName();
     public final static String j_regedit_prefix = "j.regdit.v1";

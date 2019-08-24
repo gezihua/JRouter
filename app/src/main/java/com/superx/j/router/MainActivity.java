@@ -1,12 +1,12 @@
 package com.superx.j.router;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
-import com.superx.j.regedit.JRegedit;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.superx.j.regedit.JRegeditApi;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void onClickMock(View view) {
-        JrInterface serviceByInterface = JRegedit.API.findServiceByInterface(this, JrInterface.class);
+        JrInterface serviceByInterface = JRegeditApi.API.findServiceByInterface(this, JrInterface.class);
         Log.e("MainActivity", serviceByInterface.hashCode() + "");
         serviceByInterface.sayHello();
     }
