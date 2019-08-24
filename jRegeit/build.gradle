@@ -1,0 +1,22 @@
+//apply from:'./android_home.gradle'
+apply plugin: 'java-library'
+
+static String android_home(Project project) {
+    def projectDir = project.rootProject.projectDir;
+    File propertiesFile = new File(projectDir, "local.properties");
+    if (!propertiesFile.exists()) {
+        return "";
+    }
+    Properties localPro = new Properties()
+    localPro.load(new java.io.FileInputStream(propertiesFile))
+    return localPro.getProperty("sdk.dir")
+
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    compileOnly files(android_home(project) + "/platforms/android-19/android.jar")
+}
+
+sourceCompatibility = "7"
+targetCompatibility = "7"
