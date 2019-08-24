@@ -26,7 +26,8 @@ public enum JRegedit {
     API;
     private final static String TAG = JRegedit.class.getName();
     public final static String j_regedit_prefix = "j.regdit.v1";
-    private Boolean mInit = null;
+    private Boolean mInitMetaMap = null;
+    private Boolean[] mInitServicesMap = new Boolean[]{Boolean.FALSE};
     private ConcurrentSkipListSet<String> metaInfos = new ConcurrentSkipListSet<>();
     /**
      * 这里的散列值是接口名称
@@ -40,7 +41,7 @@ public enum JRegedit {
      * @param <T>
      * @return
      */
-    public <T> T findServiceByInterface(Context context, Class<T>jrInterfaceClass) {
+    public <T> T findServiceByInterface(Context context, Class<T> jrInterfaceClass) {
 
         // 这里是来自于map 的
         ensureInitServicesMap(context);
@@ -91,11 +92,20 @@ public enum JRegedit {
         if (metaInfos == null || metaInfos.isEmpty()) {
             return;
         }
-        // 这里是所有的实现
-        for (String metaInfo : metaInfos) {
-            initService(metaInfo);
+        if (!mInitServicesMap[0]) {
+            synchronized (mInitServicesMap) {
+                if (!mInitServicesMap[0]) {
+                    // 这里是所有的实现
+                    for (String metaInfo : metaInfos) {
+                        initService(metaInfo);
+                    }
+                }
+                mInitServicesMap[0] = Boolean.TRUE;
+            }
+
 
         }
+
 
     }
 
@@ -264,12 +274,11 @@ public enum JRegedit {
             return;
         }
 
-        if (mInit == null) {
+        if (mInitMetaMap == null) {
             synchronized (JRegedit.class) {
-                if (mInit == null) {
+                if (mInitMetaMap == null) {
                     findRegeitFromMetaData(context);
-
-                    mInit = Boolean.TRUE;
+                    mInitMetaMap = Boolean.TRUE;
                 }
             }
         }
