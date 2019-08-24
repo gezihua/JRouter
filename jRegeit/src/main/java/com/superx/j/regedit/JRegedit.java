@@ -34,6 +34,13 @@ public enum JRegedit {
      */
     private ConcurrentHashMap<String, ServiceDescription> services = new ConcurrentHashMap<>();
 
+    /**
+     * 这里就可以考虑并发的问题了
+     *
+     * @param jrInterfaceClass
+     * @param <T>
+     * @return
+     */
     public <T> T findServiceByInterface(Class jrInterfaceClass) {
         Context context = null;
 
@@ -57,21 +64,23 @@ public enum JRegedit {
         if (serviceDescription == null) {
             return null;
         }
-        Object formObjectByClassName = formObjectByClassName(serviceDescription.getInterfaceClassIml());
-        if (formObjectByClassName == null) {
-            return null;
-        }
-        List<? extends Class> interfaceNames = findInterfaceNames(serviceDescription.getInterfaceClassIml());
-        for (Class interfaceName : interfaceNames) {
-            ServiceDescription serviceDescription1 = services.get(interfaceName);
-            if (serviceDescription1 == null) {
-                initService(interfaceName.getName());
-            } else {
-                serviceDescription1.setInterfaceClassImlObject(formObjectByClassName);
+        synchronized (JRegedit.class) {
+            Object formObjectByClassName = formObjectByClassName(serviceDescription.getInterfaceClassIml());
+            if (formObjectByClassName == null) {
+                return null;
             }
+            List<? extends Class> interfaceNames = findInterfaceNames(serviceDescription.getInterfaceClassIml());
+            for (Class interfaceName : interfaceNames) {
+                ServiceDescription serviceDescription1 = services.get(interfaceName);
+                if (serviceDescription1 == null) {
+                    initService(interfaceName.getName());
+                } else {
+                    serviceDescription1.setInterfaceClassImlObject(formObjectByClassName);
+                }
 
+            }
+            return (T) formObjectByClassName;
         }
-        return (T) formObjectByClassName;
 
     }
 
