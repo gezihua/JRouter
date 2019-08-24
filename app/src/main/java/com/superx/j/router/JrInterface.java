@@ -7,4 +7,5 @@ package com.superx.j.router;
  * QQ:1553202383
  */
 public interface JrInterface {
+    public void sayHello();
 }

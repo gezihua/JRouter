@@ -3,6 +3,7 @@ package com.superx.j.router;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import com.superx.j.regedit.JRegedit;
@@ -22,9 +23,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void onClickMock(View view) {
-
-        JRegedit.API.findServiceByInterface(JrInterface.class);
-
-
+        JrInterface serviceByInterface = JRegedit.API.findServiceByInterface(this, JrInterface.class);
+        Log.e("MainActivity", serviceByInterface.hashCode() + "");
+        serviceByInterface.sayHello();
     }
 }

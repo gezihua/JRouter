@@ -6,7 +6,6 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.TextUtils;
 
-import com.sun.istack.internal.NotNull;
 import com.superx.j.regedit.annation.JRegeditAnnation;
 import com.superx.j.regedit.log.JLog;
 
@@ -41,8 +40,7 @@ public enum JRegedit {
      * @param <T>
      * @return
      */
-    public <T> T findServiceByInterface(Class jrInterfaceClass) {
-        Context context = null;
+    public <T> T findServiceByInterface(Context context, Class<T>jrInterfaceClass) {
 
         // 这里是来自于map 的
         ensureInitServicesMap(context);
@@ -50,7 +48,7 @@ public enum JRegedit {
 
         // 这个可以后边在写
         ensureInitServicesAndImlMap();
-        ServiceDescription serviceDescription = services.get(jrInterfaceClass);
+        ServiceDescription serviceDescription = services.get(jrInterfaceClass.getName());
         T interfaceClassImlObject = (T) serviceDescription.getInterfaceClassImlObject();
         if (interfaceClassImlObject != null) {
             return interfaceClassImlObject;
@@ -89,7 +87,6 @@ public enum JRegedit {
      * 这里需要维护一个三元组合，第一个
      */
 
-    @NotNull
     private void ensureInitServicesAndImlMap() {
         if (metaInfos == null || metaInfos.isEmpty()) {
             return;
@@ -162,7 +159,7 @@ public enum JRegedit {
             return null;
         }
         List<? extends Class> interfaceNamesByAnnations = findInterfaceNamesByAnnations(metaInfo);
-        if (interfaceNamesByAnnations != null) {
+        if (interfaceNamesByAnnations != null && !interfaceNamesByAnnations.isEmpty()) {
             return interfaceNamesByAnnations;
         }
         JLog.e(TAG, "metainfo :" + metaInfo + "with out annoation,form found interface");
@@ -285,8 +282,11 @@ public enum JRegedit {
             ApplicationInfo applicationInfo = context.getPackageManager().getApplicationInfo(
                     context.getPackageName(), PackageManager.GET_META_DATA);
             Bundle metaData = applicationInfo.metaData;
+            if (metaData == null) {
+                return;
+            }
             Set<String> strings = metaData.keySet();
-            if (strings != null) {
+            if (strings == null) {
                 return;
             }
             for (String string : strings) {
@@ -300,7 +300,7 @@ public enum JRegedit {
                 if (!metaDataString.equalsIgnoreCase(j_regedit_prefix)) {
                     continue;
                 }
-                metaInfos.add(metaDataString);
+                metaInfos.add(string);
             }
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();

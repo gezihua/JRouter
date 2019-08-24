@@ -1,5 +1,7 @@
 package com.superx.j.router;
 
+import android.util.Log;
+
 import com.superx.j.regedit.annation.JRegeditAnnation;
 
 /**
@@ -9,6 +11,10 @@ import com.superx.j.regedit.annation.JRegeditAnnation;
  * QQ:1553202383
  */
 
-@JRegeditAnnation
+@JRegeditAnnation(interfaces = {JrInterface.class})
 public class JrInterfaceIml implements JrInterface {
+    @Override
+    public void sayHello() {
+        Log.e("JrInterfaceIml", "hello ni 好");
+    }
 }
