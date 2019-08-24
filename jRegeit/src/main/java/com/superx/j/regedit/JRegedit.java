@@ -34,7 +34,7 @@ public enum JRegedit {
      */
     private ConcurrentHashMap<String, ServiceDescription> services = new ConcurrentHashMap<>();
 
-    public void findServiceByInterface(Class jrInterfaceClass) {
+    public <T> T findServiceByInterface(Class jrInterfaceClass) {
         Context context = null;
 
         // 这里是来自于map 的
@@ -43,7 +43,35 @@ public enum JRegedit {
 
         // 这个可以后边在写
         ensureInitServicesAndImlMap();
+        ServiceDescription serviceDescription = services.get(jrInterfaceClass);
+        T interfaceClassImlObject = (T) serviceDescription.getInterfaceClassImlObject();
+        if (interfaceClassImlObject != null) {
+            return interfaceClassImlObject;
+        } else {
+            interfaceClassImlObject = initInterfaceByName(services, serviceDescription);
+        }
+        return interfaceClassImlObject;
+    }
 
+    private <T> T initInterfaceByName(ConcurrentHashMap<String, ServiceDescription> services, ServiceDescription serviceDescription) {
+        if (serviceDescription == null) {
+            return null;
+        }
+        Object formObjectByClassName = formObjectByClassName(serviceDescription.getInterfaceClassIml());
+        if (formObjectByClassName == null) {
+            return null;
+        }
+        List<? extends Class> interfaceNames = findInterfaceNames(serviceDescription.getInterfaceClassIml());
+        for (Class interfaceName : interfaceNames) {
+            ServiceDescription serviceDescription1 = services.get(interfaceName);
+            if (serviceDescription1 == null) {
+                initService(interfaceName.getName());
+            } else {
+                serviceDescription1.setInterfaceClassImlObject(formObjectByClassName);
+            }
+
+        }
+        return (T) formObjectByClassName;
 
     }
 
@@ -59,15 +87,19 @@ public enum JRegedit {
         }
         // 这里是所有的实现
         for (String metaInfo : metaInfos) {
-            boolean ifMetaInfoLazyInit = ifMetaInfoLazyInit(metaInfo);
-            if (ifMetaInfoLazyInit) {
-                lazyInitMetaInfo(metaInfo, services);
-            } else {
-                notLazyInitMetaInfo(metaInfo, services);
-            }
+            initService(metaInfo);
 
         }
 
+    }
+
+    private void initService(String metaInfo) {
+        boolean ifMetaInfoLazyInit = ifMetaInfoLazyInit(metaInfo);
+        if (ifMetaInfoLazyInit) {
+            lazyInitMetaInfo(metaInfo, services);
+        } else {
+            notLazyInitMetaInfo(metaInfo, services);
+        }
     }
 
     private void notLazyInitMetaInfo(String metaInfo, ConcurrentHashMap<String, ServiceDescription> services) {
