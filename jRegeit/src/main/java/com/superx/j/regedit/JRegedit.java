@@ -297,6 +297,9 @@ public enum JRegedit {
                 if (TextUtils.isEmpty(metaDataString)) {
                     continue;
                 }
+                if (!metaDataString.equalsIgnoreCase(j_regedit_prefix)) {
+                    continue;
+                }
                 metaInfos.add(metaDataString);
             }
         } catch (PackageManager.NameNotFoundException e) {
