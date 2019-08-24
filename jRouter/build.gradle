@@ -1,5 +1,5 @@
-apply from:'../android_home.gradle'
 apply plugin: 'java-library'
+apply from:'../android_home.gradle'
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 }

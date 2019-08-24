@@ -1,2 +1,2 @@
-include ':app', ':jRegeit'
+include ':app', ':jRegeit', ':jRouter'
 rootProject.name='My Application'
