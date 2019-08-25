@@ -14,4 +14,5 @@ public enum JRegeditApi {
     public <T> T findServiceByInterface(Context context, Class<T> jrInterfaceClass) {
         return JRegedit.API.findServiceByInterface(context, jrInterfaceClass);
     }
+
 }

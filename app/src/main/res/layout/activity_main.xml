@@ -9,6 +9,13 @@
     <Button
         android:id="@+id/mock"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:text="模拟service find" />
+
+    <Button
+        android:id="@+id/router"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="router" />
 
 </LinearLayout>

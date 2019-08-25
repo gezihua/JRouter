@@ -20,6 +20,19 @@ public class MainActivity extends AppCompatActivity {
                 onClickMock(view);
             }
         });
+        findViewById(R.id.router).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onClickRouter(view);
+            }
+        });
+    }
+
+    private void onClickRouter(View view) {
+//        JRouterApi.API.build("/test/main").withString("s").navigation();
+
+
+
     }
 
     private void onClickMock(View view) {
